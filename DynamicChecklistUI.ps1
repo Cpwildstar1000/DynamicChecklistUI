@@ -170,7 +170,7 @@ $GenerateListButton.Add_Click({
 
     $SelectAllCheckbox = New-Object System.Windows.Forms.CheckBox
     $SelectAllCheckbox.Text = "Select All"
-    $SelectAllCheckbox.Location = New-Object System.Drawing.Point(5,$yPos + 10)
+    $SelectAllCheckbox.Location = New-Object System.Drawing.Point(5,225)
 
     $SelectAllCheckbox.Add_CheckedChanged({
         foreach ($cb in $script:Checkboxes) {
