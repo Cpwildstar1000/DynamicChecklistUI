@@ -1,0 +1,1 @@
+powershell -ep Bypass -File .\DynamicChecklistUI.ps1
