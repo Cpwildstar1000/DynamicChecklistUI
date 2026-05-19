@@ -4,7 +4,7 @@
     "Steps": [
       { "Text": "Select to boot from IPv4 and press enter when an IP is shown", "Output": "Booted into PXE and received IP address" },
       { "Text": "At configuration manager press F8 to bring up the command prompt", "Output": null },
-      { "Text": "Enter diskpart clean disk", "Output": "Ran Diskpart and cleaned disk" },
+      { "Text": "Enter diskpart > select disk 0 > clean then exit the command prompt", "Output": "Ran Diskpart and cleaned disk" },
       { "Text": "Select the Production Win11 image (PRD abbreviation)", "Output": "Selected WIN11 PRD image" },
       { "Text": "Select Midwest > NAD > Enter Computer Name (eg. MAD-WS#####)", "Output": "Entered computer name" },
       { "Text": "Click Set Variables and then Continue", "Output": null },
@@ -27,15 +27,22 @@
   "Setup_Laptop": {
     "Name": "Setup - Laptop",
     "Steps": [
+      { "Text": "Interrupt computer startup with F12 and select boot from IPv4", "Output": "Booted into PXE and received IP address" },
+      { "Text": "At configuration manager press F8 to bring up the command prompt", "Output": null },
+      { "Text": "Enter diskpart > select disk 0 > clean then exit the command prompt", "Output": "Ran Diskpart and cleaned disk" },
+      { "Text": "Select the Production Win11 image (PRD abbreviation)", "Output": "Selected WIN11 PRD image" },
+      { "Text": "Select Midwest > NAD > Enter Computer Name (eg. MAD-LT#####)", "Output": "Entered computer name" },
+      { "Text": "Click Set Variables and then Continue", "Output": null },
       { "Text": "Log into VA - Citrix Access", "Output": null },
       { "Text": "Launch Active Directory and navigate to Staging OU", "Output": null },
-      { "Text": "Move computer from Staging OU to Workstations OU", "Output": "Moved computer from Staging OU to Workstations OU" },
+      { "Text": "Move computer from Staging OU to Laptops OU", "Output": "Moved computer from Staging OU to Laptops OU" },
       { "Text": "Update the description of the computer object", "Output": "Updated computer object description" },
       { "Text": "Launch dBAT, Search for computer name, and add to list", "Output": null },
       { "Text": "Scan computer confirm that image baseline is the same as your computer", "Output": "Confirmed image baseline" },
       { "Text": "Log into computer and run sync in Company Portal settings", "Output": null },
       { "Text": "Launch command prompt and run gpupdate", "Output": "Ran gpupdate" },
-      { "Text": "Install driver updates from network share", "Output": "Installed driver updates" },
+      { "Text": "Upgrade the BIOS to the latest version from the support website", "Output": "Ran BIOS update" },
+      { "Text": "Install driver updates from the support website", "Output": "Installed driver updates" },
       { "Text": "Confirm that computer pings with computer name", "Output": "Confirmed computer pings with computer name" },
       { "Text": "Restart computer and deploy as needed", "Output": null }
     ]
