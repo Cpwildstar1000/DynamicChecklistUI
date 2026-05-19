@@ -1,23 +1,28 @@
-####################################
-# Ticket Notes Script (JSON Engine)
-####################################
-
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 # =========================
-# LOAD ALL TEMPLATES
+# LOAD ALL TEMPLATE FILES
 # =========================
 
 $TemplatePath = Join-Path $PSScriptRoot "templates"
+
+# Structure:
+# $ChecklistTemplates[Category][TemplateKey]
 $ChecklistTemplates = @{}
 
 Get-ChildItem $TemplatePath -Filter *.json | ForEach-Object {
 
+    $category = $_.BaseName   # Setup / Deployment / Return
+
     $json = Get-Content $_.FullName -Raw | ConvertFrom-Json
 
+    if (-not $ChecklistTemplates.ContainsKey($category)) {
+        $ChecklistTemplates[$category] = @{}
+    }
+
     foreach ($key in $json.PSObject.Properties.Name) {
-        $ChecklistTemplates[$key] = $json.$key
+        $ChecklistTemplates[$category][$key] = $json.$key
     }
 }
 
@@ -38,20 +43,41 @@ $script:Checkboxes = @()
 $script:SelectedTemplate = $null
 
 # =========================
+# CATEGORY DROPDOWN
+# =========================
+
+$CategoryDropdown = New-Object System.Windows.Forms.ComboBox
+$CategoryDropdown.Location = New-Object System.Drawing.Point(10,20)
+$CategoryDropdown.Size = New-Object System.Drawing.Size(150,25)
+$CategoryDropdown.DropDownStyle = "DropDownList"
+
+foreach ($cat in $ChecklistTemplates.Keys) {
+    [void]$CategoryDropdown.Items.Add($cat)
+}
+
+# =========================
 # TEMPLATE DROPDOWN
 # =========================
 
 $TemplateDropdown = New-Object System.Windows.Forms.ComboBox
-$TemplateDropdown.Location = New-Object System.Drawing.Point(10,20)
-$TemplateDropdown.Size = New-Object System.Drawing.Size(300,25)
+$TemplateDropdown.Location = New-Object System.Drawing.Point(170,20)
+$TemplateDropdown.Size = New-Object System.Drawing.Size(250,25)
 $TemplateDropdown.DropDownStyle = "DropDownList"
 
-foreach ($key in $ChecklistTemplates.Keys) {
-    [void]$TemplateDropdown.Items.Add($key)
-}
+# When category changes → populate templates
+$CategoryDropdown.Add_SelectedIndexChanged({
+
+    $TemplateDropdown.Items.Clear()
+
+    $selectedCategory = $CategoryDropdown.SelectedItem
+
+    foreach ($templateKey in $ChecklistTemplates[$selectedCategory].Keys) {
+        [void]$TemplateDropdown.Items.Add($templateKey)
+    }
+})
 
 # =========================
-# GROUPBOX (CHECKLIST)
+# CHECKLIST UI
 # =========================
 
 $script:ListGroupBox = New-Object System.Windows.Forms.GroupBox
@@ -76,24 +102,22 @@ $MainWindow.Controls.Add($script:NotesSection)
 # BUTTONS
 # =========================
 
-$GenerateButton = New-Object System.Windows.Forms.Button
-$GenerateButton.Text = "Load Checklist"
-$GenerateButton.Location = New-Object System.Drawing.Point(320,20)
-$GenerateButton.Size = New-Object System.Drawing.Size(120,25)
+$LoadButton = New-Object System.Windows.Forms.Button
+$LoadButton.Text = "Load Checklist"
+$LoadButton.Location = New-Object System.Drawing.Point(430,20)
 
 $NotesButton = New-Object System.Windows.Forms.Button
 $NotesButton.Text = "Generate Notes"
-$NotesButton.Location = New-Object System.Drawing.Point(450,20)
-$NotesButton.Size = New-Object System.Drawing.Size(120,25)
+$NotesButton.Location = New-Object System.Drawing.Point(560,20)
 
 $CopyButton = New-Object System.Windows.Forms.Button
 $CopyButton.Text = "Copy"
-$CopyButton.Location = New-Object System.Drawing.Point(580,20)
-$CopyButton.Size = New-Object System.Drawing.Size(80,25)
+$CopyButton.Location = New-Object System.Drawing.Point(690,20)
 
 $MainWindow.Controls.AddRange(@(
+    $CategoryDropdown,
     $TemplateDropdown,
-    $GenerateButton,
+    $LoadButton,
     $NotesButton,
     $CopyButton
 ))
@@ -102,15 +126,17 @@ $MainWindow.Controls.AddRange(@(
 # LOAD CHECKLIST
 # =========================
 
-$GenerateButton.Add_Click({
+$LoadButton.Add_Click({
 
-    if (-not $TemplateDropdown.SelectedItem) {
-        [System.Windows.Forms.MessageBox]::Show("Select a template.")
+    if (-not $CategoryDropdown.SelectedItem -or -not $TemplateDropdown.SelectedItem) {
+        [System.Windows.Forms.MessageBox]::Show("Select category and template.")
         return
     }
 
+    $category = $CategoryDropdown.SelectedItem
     $templateKey = $TemplateDropdown.SelectedItem
-    $template = $ChecklistTemplates[$templateKey]
+
+    $template = $ChecklistTemplates[$category][$templateKey]
 
     if (-not $template) {
         [System.Windows.Forms.MessageBox]::Show("Template not found.")
@@ -119,7 +145,7 @@ $GenerateButton.Add_Click({
 
     $script:SelectedTemplate = $template
 
-    # Clear old checkboxes
+    # clear old checkboxes
     foreach ($cb in $script:Checkboxes) {
         $script:ListGroupBox.Controls.Remove($cb)
         $cb.Dispose()
@@ -164,7 +190,7 @@ $NotesButton.Add_Click({
 })
 
 # =========================
-# COPY NOTES
+# COPY
 # =========================
 
 $CopyButton.Add_Click({
