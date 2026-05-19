@@ -1,0 +1,28 @@
+{
+    "Deployment_Desktop": [
+        { "Text": "Log into VA - Citrix Access", "Output": null },
+        { "Text": "Launch Active Directory and navigate to Workstation OU", "Output": null },
+        { "Text": "Update computer description with users room number", "Output": "Updated computer object description" },
+        { "Text": "Assign computer to user in VISTA if needed", "Output": "Assigned computer to user in VISTA" },
+        { "Text": "Log into computer and confirm Gold Star is on desktop", "Output": "Confirmed Gold Star on desktop" },
+        { "Text": "Add computer to proper groups for special software access", "Output": "Added computer to proper groups for special software access" },
+        { "Text": "Assist customer with initial setup (ie. email encryption, printers, and Teams)", "Output": "Assisted customer with initial setup" },
+        { "Text": "Update computer location to in VISTA with room number", "Output": "Updated computer location in VISTA" },
+        { "Text": "Update old computer location in VISTA with new room number", "Output": "Updated old computer location in VISTA" }
+    ],
+    "Deployment_Laptop": [
+        { "Text": "Log into VA - Citrix Access", "Output": null },
+        { "Text": "Launch Active Directory and navigate to Laptops OU", "Output": null },
+        { "Text": "Update computer description with users room number", "Output": "Updated computer object description" },
+        { "Text": "Assign laptop to user in VISTA", "Output": "Assigned laptop to user in VISTA" },
+        { "Text": "Log into computer and confirm Gold Star is on desktop", "Output": "Confirmed Gold Star on desktop" },
+        { "Text": "Add computer to proper groups for special software access", "Output": "Added computer to proper groups for special software access" },
+        { "Text": "Assist customer with initial setup (ie. email encryption, printers, and Teams)", "Output": "Assisted customer with initial setup" },
+        { "Text": "Have user sign for laptop in VISTA", "Output": "User signed for laptop in VISTA" },
+        { "Text": "Update computer location in VISTA with room number", "Output": "Updated computer location in VISTA" },
+        { "Text": "Delete old computer from Active Directory", "Output": "Deleted computer in Active Directory" }
+    ],
+    "Deployment_Printer": [
+        { "Text": "Temp Step 1", "Output": null }
+    ]
+}
