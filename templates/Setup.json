@@ -50,14 +50,10 @@
   "Setup_Printer": {
     "Name": "Setup - Printer",
     "Steps": [
-      { "Text": "Log into VA - Citrix Access", "Output": null },
-      { "Text": "Launch Active Directory and navigate to Staging OU", "Output": null },
-      { "Text": "Move computer from Staging OU to Printers OU", "Output": "Moved printer from Staging OU to Printers OU" },
-      { "Text": "Update the description of the printer object", "Output": "Updated printer object description" },
-      { "Text": "Launch dBAT, Search for printer name, and add to list", "Output": null },
-      { "Text": "Scan printer confirm that image baseline is the same as your printer", "Output": "Confirmed image baseline" },
-      { "Text": "Install driver updates from network share", "Output": "Installed driver updates" },
-      { "Text": "Restart printer and deploy as needed", "Output": null }
+      { "Text": "Launch Zebra Setup Utilities and open communication with the printer", "Output": null },
+      { "Text": "Edit the IP in the code in OneNote and paste it in the top box", "Output": "Edited the IP address in the code" },
+      { "Text": "Send the code to the printer and wait for a response", "Output": "Sent code to printer" },
+      { "Text": "Power cycle printer and confirm it pings with IP address provided", "Output": "Power cycled printer and confirmed it pings" }
     ]
   }
 }

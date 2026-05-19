@@ -31,7 +31,11 @@
     "Deployment_Printer": {
         "Name": "Deployment - Printer",
         "Steps": [
-            { "Text": "Temp Step 1", "Output": null }
+            { "Text": "Confirm power outlet in location", "Output": "Confirmed power outlet is available" },
+            { "Text": "Confirm network jack is available", "Output": "Confirmed network jack is available" },
+            { "Text": "Plug in printer and confirm network connection", "Output": "Network connection confirmed" },
+            { "Text": "Confirm with Jim printer port and location", "Output": null },
+            { "Text": "Update location in VISTA", "Output": "Updated printer location in VISTA" }
         ]
     }
 }

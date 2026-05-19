@@ -2,19 +2,35 @@
     "Return_Desktop": {
         "Name": "Return - Desktop",
         "Steps": [
-            { "Text": "Temp Step 1", "Output": null }
+            { "Text": "Log into VISTA and navigate to the Responsibilities section", "Output": null },
+            { "Text": "Search for either the Person or Equipment", "Output": null },
+            { "Text": "Terminate the responsibility of the equipment from the user", "Output": "Terminated equipment responsibility in VISTA" },
+            { "Text": "Update the location of the equipment in VISTA", "Output": "Updated equipment in VISTA" },
+            { "Text": "Remove the IT comments on equipment if there are any", "Output": null },
+            { "Text": "If this is the last day of user, Update LEAF portal", "Output": "Updated LEAF portal" },
+            { "Text": "Delete Computer object in Active Directory", "Output": "Deleted computer from Active Directory" },
+            { "Text": "Put computer on the shelf where it belongs", "Output": "Placed computer on shelf" }
         ]
     },
     "Return_Laptop": {
         "Name": "Return - Laptop",
         "Steps": [
-            { "Text": "Temp Step 1", "Output": null }
+            { "Text": "Log into VISTA and navigate to the Responsibilities section", "Output": null },
+            { "Text": "Search for either the Person or Equipment", "Output": null },
+            { "Text": "Terminate the responsibility of the equipment from the user", "Output": "Terminated equipment responsibility in VISTA" },
+            { "Text": "Update the location of the equipment in VISTA", "Output": "Updated equipment in VISTA" },
+            { "Text": "Remove the IT comments on equipment if there are any", "Output": null },
+            { "Text": "If this is the last day of user, Update LEAF portal", "Output": "Updated LEAF portal" },
+            { "Text": "Delete Computer object in Active Directory", "Output": "Deleted computer from Active Directory" },
+            { "Text": "Put computer on the shelf where it belongs", "Output": "Placed computer on shelf" }
         ]
     },
     "Return_Printer": {
         "Name": "Return - Printer",
         "Steps": [
-            { "Text": "Temp Step 1", "Output": null }
+            { "Text": "Unplug printer from location", "Output": "Pulled printer from location" },
+            { "Text": "Confirm printer is pulled with Jim", "Output": null },
+            { "Text": "Update location in VISTA", "Output": "Updated printer location in VISTA" }
         ]
     }
 }
