@@ -1,11 +1,20 @@
 {
-    "Return_Desktop": [
-        { "Text": "Temp Step 1", "Output": null }
-    ],
-    "Return_Laptop": [
-        { "Text": "Temp Step 1", "Output": null }
-    ],
-    "Return_Printer": [
-        { "Text": "Temp Step 1", "Output": null }
-    ]
+    "Return_Desktop": {
+        "Name": "Return - Desktop",
+        "Steps": [
+            { "Text": "Temp Step 1", "Output": null }
+        ]
+    },
+    "Return_Laptop": {
+        "Name": "Return - Laptop",
+        "Steps": [
+            { "Text": "Temp Step 1", "Output": null }
+        ]
+    },
+    "Return_Printer": {
+        "Name": "Return - Printer",
+        "Steps": [
+            { "Text": "Temp Step 1", "Output": null }
+        ]
+    }
 }
