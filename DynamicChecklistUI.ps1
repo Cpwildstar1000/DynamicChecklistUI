@@ -107,7 +107,7 @@ $LoadButton.Text = "Load Checklist"
 $LoadButton.Location = New-Object System.Drawing.Point(430,20)
 
 $NotesButton = New-Object System.Windows.Forms.Button
-$NotesButton.Text = "Generate Notes"
+$NotesButton.Text = "Get Notes"
 $NotesButton.Location = New-Object System.Drawing.Point(560,20)
 
 $CopyButton = New-Object System.Windows.Forms.Button

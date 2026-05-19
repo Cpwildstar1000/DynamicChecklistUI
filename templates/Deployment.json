@@ -2,7 +2,6 @@
     "Deployment_Desktop": {
         "Name": "Deployment - Desktop",
         "Steps": [
-            { "Text": "Temp Step 1", "Output": null },
             { "Text": "Log into VA - Citrix Access", "Output": null },
             { "Text": "Launch Active Directory and navigate to Workstation OU", "Output": null },
             { "Text": "Update computer description with users room number", "Output": "Updated computer object description" },
