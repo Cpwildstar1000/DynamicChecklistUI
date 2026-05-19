@@ -1,19 +1,19 @@
 ####################################
-# Ticket Notes Creation Script     #
-# JSON Checklist Engine            #
+# Ticket Notes Script (JSON Engine)
 ####################################
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 # =========================
-# LOAD JSON TEMPLATES
+# LOAD ALL TEMPLATES
 # =========================
 
 $TemplatePath = Join-Path $PSScriptRoot "templates"
 $ChecklistTemplates = @{}
 
 Get-ChildItem $TemplatePath -Filter *.json | ForEach-Object {
+
     $json = Get-Content $_.FullName -Raw | ConvertFrom-Json
 
     foreach ($key in $json.PSObject.Properties.Name) {
@@ -21,136 +21,105 @@ Get-ChildItem $TemplatePath -Filter *.json | ForEach-Object {
     }
 }
 
-function Get-ChecklistTemplate {
-    param ($TicketType, $ProductType)
-
-    $key = "${TicketType}_${ProductType}"
-    return $ChecklistTemplates[$key]
-}
-
 # =========================
-# MAIN WINDOW
+# MAIN FORM
 # =========================
 
 $MainWindow = New-Object System.Windows.Forms.Form
 $MainWindow.Text = "Ticket Notes Program"
 $MainWindow.Size = New-Object System.Drawing.Size(1200,800)
 $MainWindow.StartPosition = "CenterScreen"
-$MainWindow.TopMost = $true
-
-# =========================
-# DROPDOWNS
-# =========================
-
-$TypeNotesDropdown = New-Object System.Windows.Forms.ComboBox
-$TypeNotesDropdown.Location = New-Object System.Drawing.Point(10,20)
-$TypeNotesDropdown.Size = New-Object System.Drawing.Size(120,20)
-
-$ProductTypeDropdown = New-Object System.Windows.Forms.ComboBox
-$ProductTypeDropdown.Location = New-Object System.Drawing.Point(10,80)
-$ProductTypeDropdown.Size = New-Object System.Drawing.Size(120,20)
-
-# Populate dropdowns
-$ChecklistTemplates.Keys | ForEach-Object {
-    $parts = $_ -split "_"
-
-    if ($parts.Count -eq 2) {
-        if ($TypeNotesDropdown.Items -notcontains $parts[0]) {
-            [void]$TypeNotesDropdown.Items.Add($parts[0])
-        }
-        if ($ProductTypeDropdown.Items -notcontains $parts[1]) {
-            [void]$ProductTypeDropdown.Items.Add($parts[1])
-        }
-    }
-}
-
-$TypeSelectorGroupBox = New-Object System.Windows.Forms.GroupBox
-$TypeSelectorGroupBox.Text = "Ticket Type"
-$TypeSelectorGroupBox.Size = New-Object System.Drawing.Size(150,60)
-$TypeSelectorGroupBox.Location = New-Object System.Drawing.Point(5,15)
-$TypeSelectorGroupBox.Controls.Add($TypeNotesDropdown)
-
-$ProductSelectorGroupBox = New-Object System.Windows.Forms.GroupBox
-$ProductSelectorGroupBox.Text = "Product"
-$ProductSelectorGroupBox.Size = New-Object System.Drawing.Size(150,60)
-$ProductSelectorGroupBox.Location = New-Object System.Drawing.Point(5,85)
-$ProductSelectorGroupBox.Controls.Add($ProductTypeDropdown)
 
 # =========================
 # GLOBAL STATE
 # =========================
 
 $script:Checkboxes = @()
+$script:SelectedTemplate = $null
 
 # =========================
-# STATIC CHECKLIST CONTAINER
+# TEMPLATE DROPDOWN
+# =========================
+
+$TemplateDropdown = New-Object System.Windows.Forms.ComboBox
+$TemplateDropdown.Location = New-Object System.Drawing.Point(10,20)
+$TemplateDropdown.Size = New-Object System.Drawing.Size(300,25)
+$TemplateDropdown.DropDownStyle = "DropDownList"
+
+foreach ($key in $ChecklistTemplates.Keys) {
+    [void]$TemplateDropdown.Items.Add($key)
+}
+
+# =========================
+# GROUPBOX (CHECKLIST)
 # =========================
 
 $script:ListGroupBox = New-Object System.Windows.Forms.GroupBox
 $script:ListGroupBox.Text = "Checklist"
-$script:ListGroupBox.Size = New-Object System.Drawing.Size(500,615)
-$script:ListGroupBox.Location = New-Object System.Drawing.Point(150,15)
+$script:ListGroupBox.Size = New-Object System.Drawing.Size(500,700)
+$script:ListGroupBox.Location = New-Object System.Drawing.Point(10,60)
 $MainWindow.Controls.Add($script:ListGroupBox)
 
 # =========================
-# NOTES SECTION (ONCE)
+# NOTES BOX
 # =========================
 
 $script:NotesSection = New-Object System.Windows.Forms.TextBox
 $script:NotesSection.Multiline = $true
 $script:NotesSection.ReadOnly = $true
-$script:NotesSection.Size = New-Object System.Drawing.Size(500,615)
-$script:NotesSection.Location = New-Object System.Drawing.Point(650,15)
+$script:NotesSection.ScrollBars = "Vertical"
+$script:NotesSection.Size = New-Object System.Drawing.Size(600,700)
+$script:NotesSection.Location = New-Object System.Drawing.Point(520,60)
 $MainWindow.Controls.Add($script:NotesSection)
 
 # =========================
-# BUTTONS (ONCE)
+# BUTTONS
 # =========================
 
-$GenerateListButton = New-Object System.Windows.Forms.Button
-$GenerateListButton.Text = "Get List"
-$GenerateListButton.Location = New-Object System.Drawing.Point(5,160)
-$GenerateListButton.Size = New-Object System.Drawing.Size(120,25)
+$GenerateButton = New-Object System.Windows.Forms.Button
+$GenerateButton.Text = "Load Checklist"
+$GenerateButton.Location = New-Object System.Drawing.Point(320,20)
+$GenerateButton.Size = New-Object System.Drawing.Size(120,25)
 
-$GenerateNotesButton = New-Object System.Windows.Forms.Button
-$GenerateNotesButton.Text = "Get Notes"
-$GenerateNotesButton.Location = New-Object System.Drawing.Point(5,190)
-$GenerateNotesButton.Size = New-Object System.Drawing.Size(120,25)
+$NotesButton = New-Object System.Windows.Forms.Button
+$NotesButton.Text = "Generate Notes"
+$NotesButton.Location = New-Object System.Drawing.Point(450,20)
+$NotesButton.Size = New-Object System.Drawing.Size(120,25)
 
-$CopyNotesButton = New-Object System.Windows.Forms.Button
-$CopyNotesButton.Text = "Copy Notes"
-$CopyNotesButton.Location = New-Object System.Drawing.Point(5,220)
-$CopyNotesButton.Size = New-Object System.Drawing.Size(120,25)
+$CopyButton = New-Object System.Windows.Forms.Button
+$CopyButton.Text = "Copy"
+$CopyButton.Location = New-Object System.Drawing.Point(580,20)
+$CopyButton.Size = New-Object System.Drawing.Size(80,25)
 
 $MainWindow.Controls.AddRange(@(
-    $TypeSelectorGroupBox,
-    $ProductSelectorGroupBox,
-    $GenerateListButton,
-    $GenerateNotesButton,
-    $CopyNotesButton
+    $TemplateDropdown,
+    $GenerateButton,
+    $NotesButton,
+    $CopyButton
 ))
 
 # =========================
-# GENERATE LIST
+# LOAD CHECKLIST
 # =========================
 
-$GenerateListButton.Add_Click({
+$GenerateButton.Add_Click({
 
-    if (-not $TypeNotesDropdown.SelectedItem -or -not $ProductTypeDropdown.SelectedItem) {
-        [System.Windows.Forms.MessageBox]::Show("Select both ticket type and product type.")
+    if (-not $TemplateDropdown.SelectedItem) {
+        [System.Windows.Forms.MessageBox]::Show("Select a template.")
         return
     }
 
-    $template = Get-ChecklistTemplate `
-        -TicketType $TypeNotesDropdown.SelectedItem `
-        -ProductType $ProductTypeDropdown.SelectedItem
+    $templateKey = $TemplateDropdown.SelectedItem
+    $template = $ChecklistTemplates[$templateKey]
 
     if (-not $template) {
-        [System.Windows.Forms.MessageBox]::Show("No template found.")
+        [System.Windows.Forms.MessageBox]::Show("Template not found.")
         return
     }
 
-    # Clear old checkboxes safely
+    $script:SelectedTemplate = $template
+
+    # Clear old checkboxes
     foreach ($cb in $script:Checkboxes) {
         $script:ListGroupBox.Controls.Remove($cb)
         $cb.Dispose()
@@ -160,7 +129,7 @@ $GenerateListButton.Add_Click({
 
     $script:ListGroupBox.Text = $template.Name
 
-    $yPos = 20
+    $y = 25
 
     foreach ($step in $template.Steps) {
 
@@ -168,12 +137,12 @@ $GenerateListButton.Add_Click({
         $cb.Text = $step.Text
         $cb.Tag = $step.Output
         $cb.AutoSize = $true
-        $cb.Location = New-Object System.Drawing.Point(10,$yPos)
+        $cb.Location = New-Object System.Drawing.Point(10, $y)
 
         $script:ListGroupBox.Controls.Add($cb)
         $script:Checkboxes += $cb
 
-        $yPos += 25
+        $y += 22
     }
 })
 
@@ -181,7 +150,7 @@ $GenerateListButton.Add_Click({
 # GENERATE NOTES
 # =========================
 
-$GenerateNotesButton.Add_Click({
+$NotesButton.Add_Click({
 
     $output = foreach ($cb in $script:Checkboxes) {
         if ($cb.Checked -and $cb.Tag) {
@@ -198,14 +167,14 @@ $GenerateNotesButton.Add_Click({
 # COPY NOTES
 # =========================
 
-$CopyNotesButton.Add_Click({
+$CopyButton.Add_Click({
     if ($script:NotesSection.Text) {
         [System.Windows.Forms.Clipboard]::SetText($script:NotesSection.Text)
     }
 })
 
 # =========================
-# SHOW UI
+# RUN
 # =========================
 
 [void]$MainWindow.ShowDialog()
